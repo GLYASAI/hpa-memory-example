@@ -1,19 +1,16 @@
 package com.goodrain.hpamemoryexample.controller;
 
-import com.goodrain.hpamemoryexample.service.ImageResizerService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.http.MediaType.TEXT_HTML;
 
@@ -21,31 +18,40 @@ import static org.springframework.http.MediaType.TEXT_HTML;
 @RequestMapping("/api")
 public class ImageResizerController {
 
-    private final ImageResizerService imageResizerService;
+    List<OOMObject> list = new ArrayList<>();
 
-    public ImageResizerController(ImageResizerService imageResizerService) {
-        this.imageResizerService = imageResizerService;
+    static class OOMObject {
+
+        byte[] fileContent;
+
+        public OOMObject(byte[] fileContent) {
+            this.fileContent = fileContent;
+        }
     }
 
-    @PostMapping("/resize")
-    public ResponseEntity<?> resize(
-            @RequestParam("data") MultipartFile file) {
-
+    @GetMapping("/resize")
+    public ResponseEntity<?> resize() {
         try {
-            BufferedImage resizedImage = this.imageResizerService.resize(file.getBytes());
 
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            ImageIO.write(resizedImage, "jpg", byteArrayOutputStream);
-            byte[] bytes = byteArrayOutputStream.toByteArray();
+            File file = new File(getClass().getClassLoader().getResource("teddy-kelley-106391-unsplash.jpg").getFile());
+            byte[] fileContent = Files.readAllBytes(file.toPath());
+            OOMObject oomObject = new OOMObject(fileContent);
+            list.add(oomObject);
 
-            Thread.sleep(1 * 500);
             return ResponseEntity.ok()
                     .contentType(TEXT_HTML)
                     .body("ok");
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    @GetMapping("/read-size")
+    public ResponseEntity<?> readzise() {
+        return ResponseEntity.ok()
+                .contentType(TEXT_HTML)
+                .body(list.size() + "");
     }
 
 
