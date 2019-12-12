@@ -29,8 +29,8 @@ public class ImageResizerController {
         }
     }
 
-    @GetMapping("/resize")
-    public ResponseEntity<?> resize() {
+    @GetMapping("/increase")
+    public ResponseEntity<?> increase() {
         try {
 
             File file = new File(getClass().getClassLoader().getResource("teddy-kelley-106391-unsplash.jpg").getFile());
@@ -44,10 +44,17 @@ public class ImageResizerController {
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
-    @GetMapping("/read-size")
+    @GetMapping("/clear")
+    public ResponseEntity<?> decrease() {
+        list.clear();
+        return ResponseEntity.ok()
+                .contentType(TEXT_HTML)
+                .body("ok");
+    }
+
+    @GetMapping("/read")
     public ResponseEntity<?> readzise() {
         return ResponseEntity.ok()
                 .contentType(TEXT_HTML)
