@@ -36,7 +36,7 @@ public class ImageResizerController {
             ImageIO.write(resizedImage, "jpg", byteArrayOutputStream);
             byte[] bytes = byteArrayOutputStream.toByteArray();
 
-            Thread.sleep(1 * 1000);
+            Thread.sleep(1 * 500);
             return ResponseEntity.ok()
                     .contentLength(bytes.length)
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
