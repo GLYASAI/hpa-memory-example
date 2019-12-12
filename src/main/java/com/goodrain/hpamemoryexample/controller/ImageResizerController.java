@@ -15,6 +15,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import static org.springframework.http.MediaType.TEXT_HTML;
+
 @RestController
 @RequestMapping("/api")
 public class ImageResizerController {
@@ -38,9 +40,8 @@ public class ImageResizerController {
 
             Thread.sleep(1 * 500);
             return ResponseEntity.ok()
-                    .contentLength(bytes.length)
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .body(bytes);
+                    .contentType(TEXT_HTML)
+                    .body("ok");
         } catch (IOException | InterruptedException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
